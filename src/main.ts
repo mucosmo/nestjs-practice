@@ -4,7 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3300);
 }
 // Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler
 // or be explicitly marked as ignored with the `void` operator.eslint@typescript-eslint/no-floating-promises
