@@ -7,3 +7,5 @@
 ### controller
 
 ![alt text](image.png)
+
+`nest g resource [name]` 快捷产生module
