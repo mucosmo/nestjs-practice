@@ -1,0 +1,2 @@
+GET http://localhost:3300/user/stream
+Accept: text/event-stream
