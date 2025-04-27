@@ -1,3 +1,4 @@
+# overview
 ## nestjs practice
 
 ### platform
@@ -6,7 +7,7 @@
 
 ### controller
 
-![alt text](image.png)
+![alt text](markdown/controller.png)
 
 `nest g resource [name]` 快捷产生module
 
@@ -186,3 +187,6 @@ We can infer that the register() method must return something like a module sinc
 
 ## lifecycle events
 ![alt text](markdown/image-4.png)
+
+# techniques
+## configuration
