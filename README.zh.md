@@ -59,3 +59,130 @@ completely override a function depending on specific conditions (e.g., for cachi
 
 ### decorator
 An ES2016 decorator is an expression which returns a function and can take a target, name and property descriptor as arguments. You apply it by prefixing the decorator with an @ character and placing this at the very top of what you are trying to decorate. Decorators can be defined for either a class, a method or a property.
+
+## DI
+
+### [DI fundamentals](https://docs.nestjs.com/fundamentals/custom-providers)
+Dependency injection is an inversion of control (IoC) technique wherein you delegate instantiation of dependencies to the IoC container (in our case, the NestJS runtime system), instead of doing it in your own code imperatively. Let's examine what's happening in this example from the Providers chapter.
+
+First, we define a provider. The @Injectable() decorator marks the CatsService class as a provider.
+Then we request that Nest inject the provider into our controller class:
+Finally, we register the provider with the Nest IoC container:
+
+When the Nest IoC container instantiates a CatsController, it first looks for any dependencies*. When it finds the CatsService dependency, it performs a lookup on the CatsService token, which returns the CatsService class, per the registration step (#3 above). Assuming SINGLETON scope (the default behavior), Nest will then either create an instance of CatsService, cache it, and return it, or if one is already cached, return the existing instance.
+
+ads via Carbon
+GPU-Powered Charts for React, Vue, Angular: Cross-Platform Charts That Never Slow Down. Free Trial.
+ads via Carbon
+Custom providers
+In earlier chapters, we touched on various aspects of Dependency Injection (DI) and how it is used in Nest. One example of this is the constructor based dependency injection used to inject instances (often service providers) into classes. You won't be surprised to learn that Dependency Injection is built into the Nest core in a fundamental way. So far, we've only explored one main pattern. As your application grows more complex, you may need to take advantage of the full features of the DI system, so let's explore them in more detail.
+
+DI fundamentals#
+Dependency injection is an inversion of control (IoC) technique wherein you delegate instantiation of dependencies to the IoC container (in our case, the NestJS runtime system), instead of doing it in your own code imperatively. Let's examine what's happening in this example from the Providers chapter.
+
+First, we define a provider. The @Injectable() decorator marks the CatsService class as a provider.
+
+
+cats.service.tsJS
+
+import { Injectable } from '@nestjs/common';
+import { Cat } from './interfaces/cat.interface';
+
+@Injectable()
+export class CatsService {
+  private readonly cats: Cat[] = [];
+
+  findAll(): Cat[] {
+    return this.cats;
+  }
+}
+Then we request that Nest inject the provider into our controller class:
+
+
+cats.controller.tsJS
+
+import { Controller, Get } from '@nestjs/common';
+import { CatsService } from './cats.service';
+import { Cat } from './interfaces/cat.interface';
+
+@Controller('cats')
+export class CatsController {
+  constructor(private catsService: CatsService) {}
+
+  @Get()
+  async findAll(): Promise<Cat[]> {
+    return this.catsService.findAll();
+  }
+}
+Finally, we register the provider with the Nest IoC container:
+
+
+app.module.tsJS
+
+import { Module } from '@nestjs/common';
+import { CatsController } from './cats/cats.controller';
+import { CatsService } from './cats/cats.service';
+
+@Module({
+  controllers: [CatsController],
+  providers: [CatsService],
+})
+export class AppModule {}
+What exactly is happening under the covers to make this work? There are three key steps in the process:
+
+In cats.service.ts, the @Injectable() decorator declares the CatsService class as a class that can be managed by the Nest IoC container.
+In cats.controller.ts, CatsController declares a dependency on the CatsService token with constructor injection:
+
+
+  constructor(private catsService: CatsService)
+In app.module.ts, we associate the token CatsService with the class CatsService from the cats.service.ts file. We'll see below exactly how this association (also called registration) occurs.
+When the Nest IoC container instantiates a CatsController, it first looks for any dependencies*. When it finds the CatsService dependency, it performs a lookup on the CatsService token, which returns the CatsService class, per the registration step (#3 above). Assuming SINGLETON scope (the default behavior), Nest will then either create an instance of CatsService, cache it, and return it, or if one is already cached, return the existing instance.
+
+*This explanation is a bit simplified to illustrate the point. One important area we glossed over is that the process of analyzing the code for dependencies is very sophisticated, and happens during application bootstrapping. One key feature is that dependency analysis (or "creating the dependency graph"), is transitive. In the above example, if the CatsService itself had dependencies, those too would be resolved. The dependency graph ensures that dependencies are resolved in the correct order - essentially "bottom up". This mechanism relieves the developer from having to manage such complex dependency graphs.
+
+ 
+
+- Standard providers
+```js
+@Module({
+  controllers: [CatsController],
+  providers: [CatsService],
+})
+```
+The providers property takes an array of providers. So far, we've supplied those providers via a list of class names. In fact, the syntax providers: [CatsService] is short-hand for the more complete syntax:
+```js
+providers: [
+  {
+    provide: CatsService,
+    useClass: CatsService,
+  },
+];
+```
+
+## Dynamic modules
+With static module binding, there's no opportunity for the consuming module to influence how providers from the host module are configured. Why does this matter? Consider the case where we have a general purpose module that needs to behave differently in different use cases. This is analogous to the concept of a "plugin" in many systems, where a generic facility requires some configuration before it can be used by a consumer.
+```js
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { ConfigModule } from './config/config.module';
+
+@Module({
+  imports: [ConfigModule.register({ folder: './config' })],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+```
+Let's see what's happening in the dynamic example above. What are the moving parts?
+
+ConfigModule is a normal class, so we can infer that it must have a static method called register(). We know it's static because we're calling it on the ConfigModule class, not on an instance of the class. Note: this method, which we will create soon, can have any arbitrary name, but by convention we should call it either forRoot() or register().
+The register() method is defined by us, so we can accept any input arguments we like. In this case, we're going to accept a simple options object with suitable properties, which is the typical case.
+We can infer that the register() method must return something like a module since its return value appears in the familiar imports list, which we've seen so far includes a list of modules.
+
+- register：配置模块并且该配置仅对当前模块有效，适合每个实例都有不同配置的场景。
+- forRoot：配置全局模块并且该配置在应用中复用一次，适合全局共享配置的场景。
+- forFeature：基于 forRoot 配置的全局模块，允许在特定模块中进一步修改配置，适合需要为某些模块定制配置的场景。
+
+## lifecycle events
+![alt text](markdown/image-4.png)
