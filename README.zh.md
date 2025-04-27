@@ -56,3 +56,6 @@ extend the basic function behavior
 completely override a function depending on specific conditions (e.g., for caching purposes)
 
 ![alt text](markdown/image-3.png)
+
+### decorator
+An ES2016 decorator is an expression which returns a function and can take a target, name and property descriptor as arguments. You apply it by prefixing the decorator with an @ character and placing this at the very top of what you are trying to decorate. Decorators can be defined for either a class, a method or a property.

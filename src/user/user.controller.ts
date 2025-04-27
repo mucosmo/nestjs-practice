@@ -17,6 +17,7 @@ import { Observable, of, interval } from 'rxjs';
 import { map, take, toArray } from 'rxjs/operators';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { User } from 'src/decorators/user.decorator';
 
 @Controller('user')
 @UseGuards(RolesGuard)
@@ -55,7 +56,7 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string) {
+  findOne(@User('firstName') firstName: string, @Param('id', ParseIntPipe) id: string) {
     return this.userService.findOne(+id);
   }
 
