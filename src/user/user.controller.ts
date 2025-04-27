@@ -15,9 +15,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Observable, of, interval } from 'rxjs';
 import { map, take, toArray } from 'rxjs/operators';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { RolesGuard } from 'src/guards/roles.guard';
-import { User } from 'src/decorators/user.decorator';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/roles.guard';
+import { User } from '../decorators/user.decorator';
 
 @Controller('user')
 @UseGuards(RolesGuard)
