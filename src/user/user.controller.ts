@@ -18,11 +18,15 @@ import { map, take, toArray } from 'rxjs/operators';
 import { AuthGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { User } from '../decorators/user.decorator';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('user')
 @UseGuards(RolesGuard)
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private configService: ConfigService,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -57,6 +61,7 @@ export class UserController {
 
   @Get(':id')
   findOne(@User('firstName') firstName: string, @Param('id', ParseIntPipe) id: string) {
+    // const mongoConfig = this.configService.get('mongo');
     return this.userService.findOne(+id);
   }
 

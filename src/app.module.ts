@@ -4,8 +4,20 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 
+import { ConfigModule } from '@nestjs/config';
+import appConfig from './configs/app.config';
+import mongoConfig from './configs/mongo.config';
+
 @Module({
-  imports: [UserModule],
+  imports: [
+    ConfigModule.forRoot({
+      cache: true,
+      isGlobal: true,
+      envFilePath: [`env/.env.${process.env.NODE_ENV ?? 'dev'}`],
+      load: [appConfig, mongoConfig],
+    }),
+    UserModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
