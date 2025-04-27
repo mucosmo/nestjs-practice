@@ -8,14 +8,18 @@ import {
   Delete,
   Sse,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Observable, of, interval } from 'rxjs';
 import { map, take, toArray } from 'rxjs/operators';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @Controller('user')
+@UseGuards(RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -36,6 +40,7 @@ export class UserController {
   }
 
   @Sse('/stream') //事件流响应
+  @UseGuards(AuthGuard)
   findAllEventStream() {
     // 每秒发出一个递增的数字，共发出5个
     return interval(200).pipe(
