@@ -3,7 +3,9 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: ['error', 'warn'], // 只显示错误和警告日志
+  });
   await app.listen(process.env.PORT ?? 3300);
 }
 // Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler
