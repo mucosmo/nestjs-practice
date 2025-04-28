@@ -11,6 +11,8 @@ import mysqlConfig from './configs/mysql.config';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { CacheModule } from '@nestjs/cache-manager';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,6 +34,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: true,
       }),
       inject: [ConfigService],
+    }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 5000,
     }),
     UserModule,
   ],
