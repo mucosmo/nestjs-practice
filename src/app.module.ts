@@ -7,7 +7,7 @@ import { HttpLoggerMiddleware } from './middlewares/httpLogger.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './configs/app.config';
 import mongoConfig from './configs/mongo.config';
-import mysqlConfig from './configs/mysql.config';
+import mysqlConfig, { IMysqlConfig } from './configs/mysql.config';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -23,17 +23,11 @@ import { CacheModule } from '@nestjs/cache-manager';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        host: configService.get('mysql.host'),
-        port: +configService.get('mysql.port'),
-        username: configService.get('mysql.username'),
-        password: configService.get('mysql.password'),
-        database: configService.get('mysql.database'),
-        autoLoadEntities: true,
-        synchronize: true,
+        ...configService.get<IMysqlConfig>('mysql'),
       }),
-      inject: [ConfigService],
     }),
     CacheModule.register({
       isGlobal: true,

@@ -6,6 +6,8 @@ export interface IMysqlConfig {
   username: string;
   password: string;
   database: string;
+  autoLoadEntities?: boolean;
+  synchronize?: boolean;
 }
 
 // 此处会异步注册
@@ -17,5 +19,7 @@ export default registerAs(
     username: process.env.MYSQL_NAME || '',
     password: process.env.MYSQL_PASS || '',
     database: process.env.MYSQL_DATABASE || '',
+    autoLoadEntities: true,
+    synchronize: true,
   }),
 );
