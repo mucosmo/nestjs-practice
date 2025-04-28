@@ -33,6 +33,11 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Post('/batch')
+  async createBatch(@Body() users: CreateUserDto[]) {
+    return await this.userService.createMany(users);
+  }
+
   @Get()
   findAll() {
     return this.userService.findAll();

@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -11,6 +11,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private dataSource: DataSource,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -31,5 +32,24 @@ export class UserService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  //这里用 User, 还是 CreateUserDto
+  async createMany(users: CreateUserDto[]) {
+    //FIXME: 这里不对，每次都创建一个连接肯定慢
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.save(User, users[0]);
+      await queryRunner.manager.save(User, users[1]);
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      //FIXME: 这里的错误处理不太好
+      throw err;
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
