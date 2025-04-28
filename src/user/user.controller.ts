@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   UseGuards,
   ParseArrayPipe,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -69,6 +70,14 @@ export class UserController {
   findOne(@UserDec('firstName') firstName: string, @Param('id', ParseIntPipe) id: string) {
     // const mongoConfig = this.configService.get('mongo');
     return this.userService.findOne(+id);
+  }
+
+  @Get('/by/ids')
+  findByIds(
+    @Query('ids', new ParseArrayPipe({ items: Number, separator: ',' }))
+    ids: number[],
+  ) {
+    return ids;
   }
 
   @Patch(':id')
