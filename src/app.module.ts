@@ -11,8 +11,6 @@ import mysqlConfig from './configs/mysql.config';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { User } from './user/entities/user.entity'; // 导入 User 实体
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,7 +28,7 @@ import { User } from './user/entities/user.entity'; // 导入 User 实体
         username: configService.get('mysql.username'),
         password: configService.get('mysql.password'),
         database: configService.get('mysql.database'),
-        entities: [User],
+        autoLoadEntities: true,
         synchronize: true,
       }),
       inject: [ConfigService],
