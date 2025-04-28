@@ -10,7 +10,7 @@ async function bootstrap() {
   });
   app.useGlobalPipes(
     new ValidationPipe({
-      disableErrorMessages: false,
+      disableErrorMessages: true, //FIXME: 关闭错误信息没用
       whitelist: true, //移除前端传过来的，但在DTO没有validator装饰器的属性
       forbidNonWhitelisted: false, //禁止前端传过来的未定义的属性
       transform: true, //将前端传过来的数据转换为DTO的类型, 比如将字符串转换为数字
