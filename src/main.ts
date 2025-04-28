@@ -2,12 +2,21 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NetworkUtil } from './utils/network.util';
-import { Logger } from '@nestjs/common'; // 导入 Logger
+import { Logger, ValidationPipe } from '@nestjs/common'; // 导入 Logger
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: ['error', 'warn', 'log'], // nestjs 框架显示日志
   });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      disableErrorMessages: false,
+      whitelist: true, //移除前端传过来的，但在DTO没有validator装饰器的属性
+      forbidNonWhitelisted: false, //禁止前端传过来的未定义的属性
+      transform: true, //将前端传过来的数据转换为DTO的类型, 比如将字符串转换为数字
+    }),
+  );
+
   const port = process.env.PORT ?? 3300;
   await app.listen(port);
 
