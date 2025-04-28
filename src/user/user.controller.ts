@@ -9,6 +9,7 @@ import {
   Sse,
   ParseIntPipe,
   UseGuards,
+  ParseArrayPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -34,7 +35,7 @@ export class UserController {
   }
 
   @Post('/batch')
-  async createBatch(@Body() users: CreateUserDto[]) {
+  async createBatch(@Body(new ParseArrayPipe({ items: CreateUserDto })) users: CreateUserDto[]) {
     return await this.userService.createMany(users);
   }
 
