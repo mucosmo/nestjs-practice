@@ -30,7 +30,6 @@ import redisConfig from './configs/redis.config';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
         ...configService.get<IMysqlConfig>('mysql'),
       }),
     }),

@@ -1,6 +1,7 @@
 import { registerAs } from '@nestjs/config';
 
 export interface IMysqlConfig {
+  type: 'mysql' | 'mariadb';
   host: string;
   port: number;
   username: string;
@@ -14,6 +15,7 @@ export interface IMysqlConfig {
 export default registerAs(
   'mysql',
   (): IMysqlConfig => ({
+    type: 'mysql',
     host: process.env.MYSQL_HOST || 'localhost',
     port: +(process.env.MYSQL_PORT || 0),
     username: process.env.MYSQL_NAME || '',
