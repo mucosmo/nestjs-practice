@@ -4,9 +4,14 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './configs/app.config';
 import mongoConfig from './configs/mongo.config';
+import mysqlConfig from './configs/mysql.config';
+
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { User } from './user/entities/user.entity'; // 导入 User 实体
 
 @Module({
   imports: [
@@ -14,7 +19,21 @@ import mongoConfig from './configs/mongo.config';
       cache: true,
       isGlobal: true,
       envFilePath: [`env/.env.${process.env.NODE_ENV ?? 'dev'}`],
-      load: [appConfig, mongoConfig],
+      load: [appConfig, mongoConfig, mysqlConfig],
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get('mysql.host'),
+        port: +configService.get('mysql.port'),
+        username: configService.get('mysql.username'),
+        password: configService.get('mysql.password'),
+        database: configService.get('mysql.database'),
+        entities: [User],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     UserModule,
   ],
