@@ -11,7 +11,6 @@ import {
   UseGuards,
   ParseArrayPipe,
   Query,
-  Version,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -68,7 +67,6 @@ export class UserController {
   }
 
   @Get(':id')
-  @Version('1')
   findOne(@UserDec('firstName') firstName: string, @Param('id', ParseIntPipe) id: string) {
     // const mongoConfig = this.configService.get('mongo');
     return this.userService.findOne(+id);
