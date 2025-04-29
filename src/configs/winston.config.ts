@@ -67,7 +67,7 @@ const printfFormatConsole = (info) => {
   const message = printfFormatMessage(info);
   const levelColor = colors[level.toLowerCase()] || '';
   let printStr = `${labelColor}[${label}]${resetColor} ${pidColor}${process.pid}${resetColor}\
-  ${timeColor}${timestamp}${resetColor}\
+ ${timeColor}${timestamp}${resetColor}\
  ${levelColor}${levelUpper}${resetColor}\
  ${contextColor}[${context}]${resetColor}\
  ${levelColor}${message}${resetColor}\
