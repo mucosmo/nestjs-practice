@@ -60,6 +60,8 @@ const printfFormatMessage = (info) => {
   return message;
 };
 
+//TODO: 日志格式化会占用小于 1ms 的时间，
+//可以用 performance.now() 亚毫秒级别的时间来观察
 /**控制台日志打印格式 */
 const printfFormatConsole = (info) => {
   const { timestamp, level, context, ms, label } = info;
