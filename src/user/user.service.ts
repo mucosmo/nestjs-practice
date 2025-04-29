@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -7,9 +7,12 @@ import { DataSource, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { Cron, Interval, Timeout } from '@nestjs/schedule';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
     private dataSource: DataSource,
@@ -55,5 +58,20 @@ export class UserService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  @Cron('45 * * * * *')
+  handleCron() {
+    this.logger.warn('Called when the current second is 45');
+  }
+
+  @Interval(30000)
+  handleInterval() {
+    this.logger.warn('Called every 30 seconds');
+  }
+
+  @Timeout('notification', 5000)
+  handleTimeout() {
+    this.logger.warn('Called once after 5 seconds');
   }
 }

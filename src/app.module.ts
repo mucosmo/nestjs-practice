@@ -17,6 +17,7 @@ import { createKeyv } from '@keyv/redis';
 import { Keyv } from 'keyv';
 import { CacheableMemory } from 'cacheable';
 import redisConfig from './configs/redis.config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import redisConfig from './configs/redis.config';
         ],
       }),
     }),
+    ScheduleModule.forRoot(),
     UserModule,
   ],
   controllers: [AppController],
