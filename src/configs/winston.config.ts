@@ -32,17 +32,41 @@ const baseFormat = winston.format.combine(
     format: 'YY-MM-DD HH:mm:ss.SSS',
   }),
   winston.format.ms(),
+  // winston.format.errors({ stack: true }),
   winston.format.label({ label: packageJson.name, message: false }),
   winston.format.colorize({ level: false, message: false }),
   winston.format.uncolorize({ level: true, message: true }),
 );
 
+const printfFormatMessage = (info) => {
+  const { timestamp, level, context, ms, label, ...rest } = info;
+  let { message } = info;
+  if (level === 'error') {
+    message = rest.stack?.[0] || message;
+  }
+  if (message === 'undefined') message = '';
+  // 如果有额外数据，添加为 JSON
+  if (Object.keys(rest).length > 0 && !rest.splat) {
+    const metadata = { ...rest };
+    delete metadata.splat;
+    delete metadata.label;
+    delete metadata.message;
+    delete metadata.stack;
+    delete metadata.error;
+    if (Object.keys(metadata).length > 0) {
+      message += `${JSON.stringify(metadata)}`;
+    }
+  }
+  return message;
+};
+
 /**控制台日志打印格式 */
 const printfFormatConsole = (info) => {
-  const { timestamp, level, message, context, ms, label } = info;
+  const { timestamp, level, context, ms, label } = info;
   const levelUpper = level.toUpperCase().padStart(5, ' ');
+  const message = printfFormatMessage(info);
   const levelColor = colors[level.toLowerCase()] || '';
-  const printStr = `${labelColor}[${label}]${resetColor} ${pidColor}${process.pid}${resetColor}\
+  let printStr = `${labelColor}[${label}]${resetColor} ${pidColor}${process.pid}${resetColor}\
   ${timeColor}${timestamp}${resetColor}\
  ${levelColor}${levelUpper}${resetColor}\
  ${contextColor}[${context}]${resetColor}\
@@ -53,7 +77,8 @@ const printfFormatConsole = (info) => {
 
 /**文件日志打印格式 */
 const printfFormatFile = (info) => {
-  const { timestamp, level, message, context, ms } = info;
+  const { timestamp, level, context, ms } = info;
+  const message = printfFormatMessage(info);
   const levelUpper = level.toUpperCase().padStart(5, ' ');
   return `${timestamp} ${process.pid} ${levelUpper} [${context}] ${message} ${ms}`;
 };
