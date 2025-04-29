@@ -22,13 +22,16 @@ import { ConfigEnum } from './constants/config.constant';
 import { BullModule } from '@nestjs/bullmq';
 import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
 
+import winstonConfig from './configs/winston.config';
+import { WinstonModule } from 'nest-winston';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
       envFilePath: [`env/.env.${process.env.NODE_ENV ?? 'dev'}`],
-      load: [appConfig, mongoConfig, mysqlConfig, redisConfig, bullConfig],
+      load: [appConfig, mongoConfig, mysqlConfig, redisConfig, bullConfig, winstonConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -55,6 +58,13 @@ import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         connection: configService.get<IBullmqConfig>(ConfigEnum.BULLMQ) || {},
+      }),
+    }),
+    WinstonModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        transports: configService.get(ConfigEnum.WINSTON),
       }),
     }),
     UserModule,

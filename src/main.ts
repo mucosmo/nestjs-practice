@@ -5,6 +5,7 @@ import { NetworkUtil } from './utils/network.util';
 import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common'; // 导入 Logger
 
 import * as packageJson from '../package.json';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -25,6 +26,8 @@ async function bootstrap() {
       transform: true, //将前端传过来的数据转换为DTO的类型, 比如将字符串转换为数字
     }),
   );
+
+  // app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   const port = process.env.PORT ?? 3300;
   await app.listen(port);

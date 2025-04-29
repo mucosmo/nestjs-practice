@@ -4,4 +4,5 @@ export enum ConfigEnum {
   BULLMQ = 'bullmq',
   APP = 'app',
   MONGO = 'mongo',
+  WINSTON = 'winston',
 }
