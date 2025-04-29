@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NetworkUtil } from './utils/network.util';
-import { Logger, ValidationPipe } from '@nestjs/common'; // 导入 Logger
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common'; // 导入 Logger
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -16,6 +16,11 @@ async function bootstrap() {
       transform: true, //将前端传过来的数据转换为DTO的类型, 比如将字符串转换为数字
     }),
   );
+
+  app.enableVersioning({
+    type: VersioningType.HEADER,
+    header: 'UJOIN-API-VERSION',
+  });
 
   const port = process.env.PORT ?? 3300;
   await app.listen(port);
