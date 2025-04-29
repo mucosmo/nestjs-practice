@@ -29,7 +29,7 @@ const timeColor = colors.time;
 /**控制台和文件共同的格式 */
 const baseFormat = winston.format.combine(
   winston.format.timestamp({
-    format: 'YY/MM/DD HH:mm:ss.SSS',
+    format: 'YY-MM-DD HH:mm:ss.SSS',
   }),
   winston.format.ms(),
   winston.format.label({ label: packageJson.name, message: false }),
