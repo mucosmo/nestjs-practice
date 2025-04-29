@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -12,10 +12,13 @@ import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
 
 import { BullmqQueueName } from '../constants/bullmq.constant';
+import { BaseService } from 'src/core/base.service';
+
+import { Logger } from '@nestjs/common';
 
 @Injectable()
-export class UserService {
-  private readonly logger = new Logger(UserService.name);
+export class UserService extends BaseService {
+  protected readonly logger = new Logger(UserService.name);
 
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
@@ -23,7 +26,9 @@ export class UserService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectQueue(BullmqQueueName.AUDIO) private audioQueue: Queue,
     @InjectQueue(BullmqQueueName.VIDEO) private videoQueue: Queue,
-  ) {}
+  ) {
+    super();
+  }
 
   async create(createUserDto: CreateUserDto) {
     await this.usersRepository.save(createUserDto);

@@ -13,14 +13,18 @@ const colors = {
   debug: '\x1b[36m', // 青色
   verbose: '\x1b[35m', // 紫色
   reset: '\x1b[0m', // 重置颜色
-  pid: '\x1b[34m',
+  pid: '\x1b[90m',
   ms: '\x1b[90m', // 灰色
   label: '\x1b[32m',
+  context: '\x1b[36m',
+  time: '\x1b[34m',
 };
 const pidColor = colors.pid;
 const msColor = colors.ms;
 const labelColor = colors.info;
 const resetColor = colors.reset;
+const contextColor = colors.context;
+const timeColor = colors.time;
 
 /**控制台和文件共同的格式 */
 const baseFormat = winston.format.combine(
@@ -39,9 +43,9 @@ const printfFormatConsole = (info) => {
   const levelUpper = level.toUpperCase().padStart(5, ' ');
   const levelColor = colors[level.toLowerCase()] || '';
   const printStr = `${labelColor}[${label}]${resetColor} ${pidColor}${process.pid}${resetColor}\
- ${timestamp}\
+  ${timeColor}${timestamp}${resetColor}\
  ${levelColor}${levelUpper}${resetColor}\
- [${context}]\
+ ${contextColor}[${context}]${resetColor}\
  ${levelColor}${message}${resetColor}\
  ${msColor}${ms}${resetColor}`;
   return printStr;

@@ -11,7 +11,7 @@ export class BaseService {
   @Inject()
   protected readonly configService: ConfigService;
 
-  @Inject(WINSTON_MODULE_PROVIDER) protected readonly logger: Logger;
+  // @Inject(WINSTON_MODULE_PROVIDER) protected readonly logger: Logger;
 
   async onApplicationBootstrap() {}
 }
