@@ -18,6 +18,7 @@ import { Keyv } from 'keyv';
 import { CacheableMemory } from 'cacheable';
 import redisConfig from './configs/redis.config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ConfigEnum } from './constants/config.constant';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        ...configService.get<IMysqlConfig>('mysql'),
+        ...configService.get<IMysqlConfig>(ConfigEnum.MYSQL),
       }),
     }),
     CacheModule.registerAsync({
@@ -42,7 +43,7 @@ import { ScheduleModule } from '@nestjs/schedule';
           // new Keyv({
           //   store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
           // }),
-          createKeyv(configService.get('redis.uri')),
+          createKeyv(configService.get(ConfigEnum.REDIS)?.uri),
         ],
       }),
     }),

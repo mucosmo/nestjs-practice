@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config';
+import { ConfigEnum } from '../constants/config.constant';
 
 export interface IMysqlConfig {
   type: 'mysql' | 'mariadb';
@@ -13,7 +14,7 @@ export interface IMysqlConfig {
 
 // 此处会异步注册
 export default registerAs(
-  'mysql',
+  ConfigEnum.MYSQL,
   (): IMysqlConfig => ({
     type: 'mysql',
     host: process.env.MYSQL_HOST || 'localhost',
