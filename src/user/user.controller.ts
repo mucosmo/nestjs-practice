@@ -22,7 +22,7 @@ import { RolesGuard } from '../guards/roles.guard';
 import { User as UserDec } from '../decorators/user.decorator';
 import { ConfigService } from '@nestjs/config';
 
-@Controller({ path: 'user', version: '1' })
+@Controller('user')
 @UseGuards(RolesGuard)
 export class UserController {
   constructor(
