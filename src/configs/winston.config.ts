@@ -5,26 +5,62 @@ import 'winston-daily-rotate-file';
 import * as winston from 'winston';
 import * as packageJson from '../../package.json';
 
-const printfFormat = (info) => {
-  const { timestamp, level, message, context, ms, label } = info;
-  return `[${label}] ${process.pid} - ${timestamp} ${level.toUpperCase()} [${context}] ${message} ${ms}`;
+/** 定义不同日志级别的颜色代码 */
+const colors = {
+  error: '\x1b[31m', // 红色
+  warn: '\x1b[33m', // 黄色
+  info: '\x1b[32m', // 绿色
+  debug: '\x1b[36m', // 青色
+  verbose: '\x1b[35m', // 紫色
+  reset: '\x1b[0m', // 重置颜色
+  pid: '\x1b[34m',
+  ms: '\x1b[90m', // 灰色
+  label: '\x1b[32m',
 };
+const pidColor = colors.pid;
+const msColor = colors.ms;
+const labelColor = colors.info;
+const resetColor = colors.reset;
 
-const combineFormat = winston.format.combine(
+/**控制台和文件共同的格式 */
+const baseFormat = winston.format.combine(
   winston.format.timestamp({
-    format: 'YYYY/MM/DD HH:mm:ss',
+    format: 'YY/MM/DD HH:mm:ss.SSS',
   }),
   winston.format.ms(),
   winston.format.label({ label: packageJson.name, message: false }),
   winston.format.colorize({ level: false, message: false }),
   winston.format.uncolorize({ level: true, message: true }),
-  winston.format.printf((info) => printfFormat(info)),
 );
+
+/**控制台日志打印格式 */
+const printfFormatConsole = (info) => {
+  const { timestamp, level, message, context, ms, label } = info;
+  const levelUpper = level.toUpperCase().padStart(5, ' ');
+  const levelColor = colors[level.toLowerCase()] || '';
+  const printStr = `${labelColor}[${label}]${resetColor} ${pidColor}${process.pid}${resetColor}\
+ ${timestamp}\
+ ${levelColor}${levelUpper}${resetColor}\
+ [${context}]\
+ ${levelColor}${message}${resetColor}\
+ ${msColor}${ms}${resetColor}`;
+  return printStr;
+};
+
+/**文件日志打印格式 */
+const printfFormatFile = (info) => {
+  const { timestamp, level, message, context, ms } = info;
+  const levelUpper = level.toUpperCase().padStart(5, ' ');
+  return `${timestamp} ${process.pid} ${levelUpper} [${context}] ${message} ${ms}`;
+};
 
 // 此处会异步注册
 export default registerAs(ConfigEnum.WINSTON, () => [
   new winston.transports.Console({
-    format: combineFormat,
+    format: winston.format.combine(
+      baseFormat,
+      winston.format.printf((info) => printfFormatConsole(info)),
+    ),
   }),
   new winston.transports.DailyRotateFile({
     dirname: `logs`,
@@ -33,6 +69,9 @@ export default registerAs(ConfigEnum.WINSTON, () => [
     zippedArchive: true,
     maxSize: '100m',
     maxFiles: '31d',
-    format: combineFormat,
+    format: winston.format.combine(
+      baseFormat,
+      winston.format.printf((info) => printfFormatFile(info)),
+    ),
   }),
 ]);
