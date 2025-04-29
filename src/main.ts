@@ -2,11 +2,20 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NetworkUtil } from './utils/network.util';
-import { Logger, ValidationPipe } from '@nestjs/common'; // 导入 Logger
+import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common'; // 导入 Logger
+
+import * as packageJson from '../package.json';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['error', 'warn', 'log'], // nestjs 框架显示日志
+    logger: new ConsoleLogger({
+      prefix: packageJson.name, // Default is "Nest"
+      logLevels: ['error', 'warn', 'log', 'debug'],
+      timestamp: true,
+      colors: true,
+      json: false,
+      maxStringLength: Infinity,
+    }),
   });
   app.useGlobalPipes(
     new ValidationPipe({
