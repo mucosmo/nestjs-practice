@@ -89,4 +89,17 @@ export class UserController {
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
+
+  @Get('/feat/compression')
+  getCompression() {
+    const result = Array(10005)
+      .fill({})
+      .map((item, index) => {
+        return {
+          id: index,
+          name: `name-${index}`,
+        };
+      });
+    return result;
+  }
 }

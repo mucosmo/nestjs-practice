@@ -7,6 +7,8 @@ import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common'; // 导�
 import * as packageJson from '../package.json';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
+import compression from 'compression';
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: new ConsoleLogger({
@@ -28,6 +30,21 @@ async function bootstrap() {
   );
 
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+  //NOTE: 如果有nginx, 最好在nginx上实现这个功能
+  //不是所有情况都能加速响应的
+  app.use(
+    compression({
+      level: 6, // 压缩级别，范围是 0-9，0 表示不压缩，9 表示最高压缩率
+      threshold: 1024 * 1024, // 只有在响应体大于这个值时才会进行压缩
+      filter: (req, res) => {
+        if (req.headers['x-no-compression']) {
+          return false; // 根据请求头判断是否需要压缩
+        }
+        return compression.filter(req, res);
+      },
+    }),
+  );
 
   const port = process.env.PORT ?? 3300;
   await app.listen(port);
