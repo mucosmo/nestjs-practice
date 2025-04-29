@@ -19,6 +19,8 @@ import { CacheableMemory } from 'cacheable';
 import redisConfig from './configs/redis.config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigEnum } from './constants/config.constant';
+import { BullModule } from '@nestjs/bullmq';
+import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { ConfigEnum } from './constants/config.constant';
       cache: true,
       isGlobal: true,
       envFilePath: [`env/.env.${process.env.NODE_ENV ?? 'dev'}`],
-      load: [appConfig, mongoConfig, mysqlConfig, redisConfig],
+      load: [appConfig, mongoConfig, mysqlConfig, redisConfig, bullConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -48,6 +50,13 @@ import { ConfigEnum } from './constants/config.constant';
       }),
     }),
     ScheduleModule.forRoot(),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        connection: configService.get<IBullmqConfig>(ConfigEnum.BULLMQ) || {},
+      }),
+    }),
     UserModule,
   ],
   controllers: [AppController],

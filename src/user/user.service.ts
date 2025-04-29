@@ -8,6 +8,10 @@ import { User } from './entities/user.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Cron, Interval, Timeout } from '@nestjs/schedule';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
+
+import { BullmqQueueName } from '../constants/bullmq.constant';
 
 @Injectable()
 export class UserService {
@@ -17,6 +21,8 @@ export class UserService {
     @InjectRepository(User) private usersRepository: Repository<User>,
     private dataSource: DataSource,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @InjectQueue(BullmqQueueName.AUDIO) private audioQueue: Queue,
+    @InjectQueue(BullmqQueueName.VIDEO) private videoQueue: Queue,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -73,5 +79,39 @@ export class UserService {
   @Timeout('notification', 5000)
   handleTimeout() {
     this.logger.warn('Called once after 5 seconds');
+  }
+
+  @Timeout(3000)
+  async addAudioJob() {
+    await this.audioQueue.add(
+      'jobname',
+      {
+        data: {
+          age: 13,
+          type: 'audio',
+        },
+      },
+      {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
+        removeOnComplete: true,
+        removeOnFail: false,
+      },
+    );
+    await this.videoQueue.add('jobname', {
+      data: {
+        age: 14,
+        type: 'video',
+      },
+    });
+  }
+
+  async getJobProgress(jobId: string) {
+    const job = await this.audioQueue.getJob(jobId);
+    const progress = job?.progress;
+    this.logger.log(`job id: ${job.id}, state: ${await job.getState()}, progress: ${progress}`);
   }
 }
