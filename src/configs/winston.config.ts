@@ -103,4 +103,17 @@ export default registerAs(ConfigEnum.WINSTON, () => [
       winston.format.printf((info) => printfFormatFile(info)),
     ),
   }),
+  new winston.transports.DailyRotateFile({
+    dirname: `logs`,
+    filename: `%DATE%.error.log`,
+    datePattern: 'YYYY-MM-DD',
+    zippedArchive: true,
+    maxSize: '100m',
+    maxFiles: '90d',
+    format: winston.format.combine(
+      baseFormat,
+      winston.format.printf((info) => printfFormatFile(info)),
+    ),
+    level: 'error',
+  }),
 ]);
