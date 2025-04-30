@@ -4,6 +4,7 @@ import { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
 
 export abstract class BaseProcessor extends WorkerHost implements OnModuleInit {
+  //TODO: 如何在这里定义待名称的 logger
   protected abstract readonly logger: Logger;
 
   onModuleInit() {
