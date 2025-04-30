@@ -1,9 +1,9 @@
 import { registerAs } from '@nestjs/config';
-import { ConfigEnum } from '../constants/config.constant';
-
 import 'winston-daily-rotate-file';
 import * as winston from 'winston';
+
 import * as packageJson from '../../package.json';
+import { ConfigEnum } from '../constants/config.constant';
 
 /** 定义不同日志级别的颜色代码 */
 const colors = {
@@ -68,7 +68,7 @@ const printfFormatConsole = (info) => {
   const levelUpper = level.toUpperCase().padStart(5, ' ');
   const message = printfFormatMessage(info);
   const levelColor = colors[level.toLowerCase()] || '';
-  let printStr = `${labelColor}[${label}]${resetColor} ${pidColor}${process.pid}${resetColor}\
+  const printStr = `${labelColor}[${label}]${resetColor} ${pidColor}${process.pid}${resetColor}\
  ${timeColor}${timestamp}${resetColor}\
  ${levelColor}${levelUpper}${resetColor}\
  ${contextColor}[${context}]${resetColor}\

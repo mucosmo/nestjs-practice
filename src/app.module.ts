@@ -1,29 +1,25 @@
+import { createKeyv } from '@keyv/redis';
+import { BullModule } from '@nestjs/bullmq';
+import { CacheModule } from '@nestjs/cache-manager';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CacheableMemory } from 'cacheable';
+import { Keyv } from 'keyv';
+import { WinstonModule } from 'nest-winston';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { HttpLoggerMiddleware } from './middlewares/httpLogger.middleware';
-
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './configs/app.config';
+import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
 import mongoConfig from './configs/mongo.config';
 import mysqlConfig, { IMysqlConfig } from './configs/mysql.config';
-
-import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { CacheModule } from '@nestjs/cache-manager';
-
-import { createKeyv } from '@keyv/redis';
-import { Keyv } from 'keyv';
-import { CacheableMemory } from 'cacheable';
 import redisConfig from './configs/redis.config';
-import { ScheduleModule } from '@nestjs/schedule';
-import { ConfigEnum } from './constants/config.constant';
-import { BullModule } from '@nestjs/bullmq';
-import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
-
 import winstonConfig from './configs/winston.config';
-import { WinstonModule } from 'nest-winston';
+import { ConfigEnum } from './constants/config.constant';
+import { HttpLoggerMiddleware } from './middlewares/httpLogger.middleware';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -45,7 +41,7 @@ import { WinstonModule } from 'nest-winston';
     CacheModule.registerAsync({
       isGlobal: true,
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         stores: [
           // new Keyv({
           //   store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
@@ -58,14 +54,14 @@ import { WinstonModule } from 'nest-winston';
     BullModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         connection: configService.get<IBullmqConfig>(ConfigEnum.BULLMQ) || {},
       }),
     }),
     WinstonModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         transports: configService.get(ConfigEnum.WINSTON),
       }),
     }),

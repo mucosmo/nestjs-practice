@@ -1,11 +1,10 @@
 import { Processor } from '@nestjs/bullmq';
-import { Job } from 'bullmq';
-import { BullmqQueueName } from '../../constants/bullmq.constant';
-
-import { CommonUtil } from '../../utils/common.util';
 import { Logger } from '@nestjs/common';
+import { Job } from 'bullmq';
 
+import { BullmqQueueName } from '../../constants/bullmq.constant';
 import { BaseProcessor } from '../../processors/base.processor';
+import { CommonUtil } from '../../utils/common.util';
 
 @Processor(BullmqQueueName.AUDIO)
 export class AudioProcessor extends BaseProcessor {

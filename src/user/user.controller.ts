@@ -12,15 +12,17 @@ import {
   ParseArrayPipe,
   Query,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { ConfigService } from '@nestjs/config';
 import { Observable, of, interval } from 'rxjs';
 import { map, take, toArray } from 'rxjs/operators';
+
+import { User as UserDec } from '../decorators/user.decorator';
 import { AuthGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
-import { User as UserDec } from '../decorators/user.decorator';
-import { ConfigService } from '@nestjs/config';
+
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 @UseGuards(RolesGuard)

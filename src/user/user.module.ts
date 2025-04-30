@@ -1,12 +1,14 @@
-import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { UserSubscriber } from './user.subscriber';
 import { BullModule } from '@nestjs/bullmq';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { BullmqQueueName } from '../constants/bullmq.constant';
+
 import { AudioProcessor } from './consumers/audio.consumer';
+import { User } from './entities/user.entity';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
+import { UserSubscriber } from './user.subscriber';
 
 @Module({
   imports: [

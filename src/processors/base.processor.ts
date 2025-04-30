@@ -1,7 +1,6 @@
-import { OnModuleInit } from '@nestjs/common';
 import { WorkerHost } from '@nestjs/bullmq';
+import { OnModuleInit, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { Logger } from '@nestjs/common';
 
 export abstract class BaseProcessor extends WorkerHost implements OnModuleInit {
   //TODO: 如何在这里定义待名称的 logger
@@ -19,7 +18,7 @@ export abstract class BaseProcessor extends WorkerHost implements OnModuleInit {
     });
 
     worker.on('progress', (job, progress) => {
-      this.logger.log(`Job ${job.id} reported progress: ${progress}`);
+      this.logger.log(`Job ${job.id} reported progress: ${Number(progress)}`);
     });
 
     worker.on('completed', (job, result) => {

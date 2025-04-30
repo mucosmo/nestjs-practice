@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
 import { Logger } from '@nestjs/common'; // 导入 Logger
+import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class HttpLoggerMiddleware implements NestMiddleware {
@@ -13,7 +13,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
     const userAgent = req.headers['user-agent'];
     res.on('finish', () => {
       this.logger.log(
-        `${req.method} ${originalUrl} ${res.statusCode} ${Date.now() - startTime}ms - ${ip} - ${userAgent || ''}`,
+        `${req.method} ${originalUrl} ${res.statusCode} ${Date.now() - startTime}ms - ${String(ip)} - ${userAgent || ''}`,
       );
     });
     next();

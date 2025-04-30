@@ -1,13 +1,13 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { NetworkUtil } from './utils/network.util';
 import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common'; // 导入 Logger
-
-import * as packageJson from '../package.json';
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import compression from 'compression';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
-import compression from 'compression';
+import * as packageJson from '../package.json';
+
+import { AppModule } from './app.module';
+import { NetworkUtil } from './utils/network.util';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {

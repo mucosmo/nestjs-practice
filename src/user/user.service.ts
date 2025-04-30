@@ -1,20 +1,19 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-
-import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
-import { User } from './entities/user.entity';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
-import { Cron, Interval, Timeout } from '@nestjs/schedule';
-import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Cron, Interval, Timeout } from '@nestjs/schedule';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Queue } from 'bullmq';
+import { Cache } from 'cache-manager';
+import { DataSource, Repository } from 'typeorm';
 
-import { BullmqQueueName } from '../constants/bullmq.constant';
 import { BaseService } from 'src/core/base.service';
 
-import { Logger } from '@nestjs/common';
+import { BullmqQueueName } from '../constants/bullmq.constant';
+
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService extends BaseService {
@@ -40,7 +39,7 @@ export class UserService extends BaseService {
 
   async findOne(id: number) {
     await this.cacheManager.set('key', 'cache-value', 1000);
-    const value = await this.cacheManager.get('key');
+    const value = await this.cacheManager.get<string>('key');
     return `This action returns a #${id} user: ${value}`;
   }
 

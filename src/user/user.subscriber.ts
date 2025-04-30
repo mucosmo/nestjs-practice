@@ -1,4 +1,5 @@
 import { DataSource, EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
+
 import { User } from './entities/user.entity';
 
 @EventSubscriber()

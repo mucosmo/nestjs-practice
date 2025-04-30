@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config';
+
 import { ConfigEnum } from '../constants/config.constant';
 
 export default registerAs(ConfigEnum.MONGO, () => ({
