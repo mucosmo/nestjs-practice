@@ -28,7 +28,7 @@ import { UserModule } from './user/user.module';
       isGlobal: true,
       // 从命令行参数中获取环境变量，然后从指定的文件中加载获取其他变量，
       // 用于下面的 load 文件中（先注册后获取）
-      envFilePath: [`env/.env.${process.env.NODE_ENV ?? 'dev'}`],
+      envFilePath: [`envs/.${process.env.NODE_ENV ?? 'dev'}.env`],
       load: [appConfig, mongoConfig, mysqlConfig, redisConfig, bullConfig, winstonConfig],
     }),
     TypeOrmModule.forRootAsync({
