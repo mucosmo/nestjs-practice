@@ -56,6 +56,7 @@ const printfFormatMessage = (info: WinstonLogInfo) => {
   if (level === 'error') {
     message = rest.stack?.[0] || message;
   }
+  if (message === 'undefined') message = '';
   // 如果有额外数据，添加为 JSON
   if (Object.keys(rest).length > 0 && !rest.splat) {
     // 创建要排除的属性集合
