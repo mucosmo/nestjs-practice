@@ -1,8 +1,9 @@
 import { createKeyv } from '@keyv/redis';
 import { BullModule } from '@nestjs/bullmq';
 import { CacheModule } from '@nestjs/cache-manager';
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheableMemory } from 'cacheable';
@@ -14,6 +15,7 @@ import { AppService } from './app.service';
 import appConfig from './configs/app.config';
 import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
 import mongoConfig from './configs/mongo.config';
+import { MulterConfigService } from './configs/multer.config';
 import mysqlConfig, { IMysqlConfig } from './configs/mysql.config';
 import redisConfig from './configs/redis.config';
 import winstonConfig from './configs/winston.config';
@@ -21,6 +23,7 @@ import { ConfigEnum } from './constants/config.constant';
 import { HttpLoggerMiddleware } from './middlewares/httpLogger.middleware';
 import { UserModule } from './user/user.module';
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -65,10 +68,16 @@ import { UserModule } from './user/user.module';
         transports: configService.get(ConfigEnum.WINSTON),
       }),
     }),
+    MulterModule.registerAsync({
+      imports: [ConfigModule],
+      useClass: MulterConfigService,
+      inject: [ConfigService],
+    }),
     UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [MulterModule],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

@@ -11,8 +11,11 @@ import {
   UseGuards,
   ParseArrayPipe,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { Observable, of, interval } from 'rxjs';
 import { map, take, toArray } from 'rxjs/operators';
 
@@ -103,5 +106,16 @@ export class UserController {
         };
       });
     return result;
+  }
+
+  @Post('/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    return {
+      filename: file.originalname,
+      path: file.path,
+      mimetype: file.mimetype,
+      size: file.size,
+    };
   }
 }
