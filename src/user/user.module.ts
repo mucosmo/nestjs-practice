@@ -24,5 +24,6 @@ import { UserSubscriber } from './user.subscriber';
   ],
   controllers: [UserController],
   providers: [UserService, UserSubscriber, AudioProcessor],
+  exports: [UserService],
 })
 export class UserModule {}

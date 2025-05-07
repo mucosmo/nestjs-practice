@@ -12,6 +12,7 @@ import { WinstonModule } from 'nest-winston';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import appConfig from './configs/app.config';
 import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
 import mongoConfig from './configs/mongo.config';
@@ -74,6 +75,7 @@ import { UserModule } from './user/user.module';
       inject: [ConfigService],
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -118,4 +118,22 @@ export class UserService extends BaseService {
     const progress = job?.progress;
     this.logger.log(`job id: ${job.id}, state: ${await job.getState()}, progress: ${progress}`);
   }
+
+  /**根据名称查找 */
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async findOneByName(username: string) {
+    const users = [
+      {
+        userId: 1,
+        username: 'john',
+        password: 'changeme',
+      },
+      {
+        userId: 2,
+        username: 'maria',
+        password: 'guess',
+      },
+    ];
+    return users.find((user) => user.username === username);
+  }
 }
