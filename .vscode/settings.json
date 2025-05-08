@@ -1,6 +1,0 @@
-{
-  "terminal.integrated.env.osx": {
-    "NVM_DIR": "${env:HOME}/.nvm",
-    "PATH": "${env:HOME}/.nvm/versions/node/v18.16.1/bin:${env:PATH}"
-  }
-}
