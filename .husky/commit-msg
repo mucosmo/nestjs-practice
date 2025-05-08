@@ -1,4 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+echo "Running commitlint checks..."
+
 npx --no-install commitlint --edit $1
