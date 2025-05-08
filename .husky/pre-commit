@@ -3,4 +3,4 @@
 
 echo "Running ESLint and Prettier checks..."
 
-npx lint-staged
+./node_modules/.bin/lint-staged
