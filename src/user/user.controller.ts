@@ -19,6 +19,8 @@ import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { Observable, of, interval } from 'rxjs';
 import { map, take, toArray } from 'rxjs/operators';
 
+import { Public } from 'src/decorators/public.decorator';
+
 import { User as UserDec } from '../decorators/user.decorator';
 import { AuthGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
@@ -45,6 +47,7 @@ export class UserController {
     return await this.userService.createMany(users);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.userService.findAll();
