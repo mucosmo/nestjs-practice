@@ -24,6 +24,7 @@
     "prepare": "husky install && chmod +x .husky/*"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.3",
     "@keyv/redis": "^4.3.4",
     "@nestjs/bullmq": "^11.0.2",
     "@nestjs/cache-manager": "^3.0.1",

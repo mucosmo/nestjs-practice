@@ -7,6 +7,9 @@ import { Queue } from 'bullmq';
 import { Cache } from 'cache-manager';
 import { DataSource, Repository } from 'typeorm';
 
+import { Article } from 'src/article/entities/article.entity';
+import { CaslAbilityFactory } from 'src/casl/casl-ability.factory/casl-ability.factory';
+import { Action } from 'src/constants/action.constants';
 import { BaseService } from 'src/core/base.service';
 
 import { BullmqQueueName } from '../constants/bullmq.constant';
@@ -25,6 +28,7 @@ export class UserService extends BaseService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectQueue(BullmqQueueName.AUDIO) private audioQueue: Queue,
     @InjectQueue(BullmqQueueName.VIDEO) private videoQueue: Queue,
+    private caslAbilityFactory: CaslAbilityFactory,
   ) {
     super();
   }
@@ -146,5 +150,28 @@ export class UserService extends BaseService {
       },
     ];
     return users.find((user) => user.username === username);
+  }
+
+  featCasl() {
+    const user = new User();
+    user.isAdmin = false;
+
+    let ability = this.caslAbilityFactory.createForUser(user);
+    const ability1 = ability.can(Action.Read, Article); // true
+    const ability2 = ability.can(Action.Delete, Article); // false
+    const ability3 = ability.can(Action.Create, Article); // false
+
+    user.id = 1;
+    ability = this.caslAbilityFactory.createForUser(user);
+
+    const article = new Article();
+    article.authorId = user.id;
+
+    const ability4 = ability.can(Action.Update, article); // true
+
+    article.authorId = 2;
+    const ability5 = ability.can(Action.Update, article); // false
+
+    return { ability1, ability2, ability3, ability4, ability5 };
   }
 }

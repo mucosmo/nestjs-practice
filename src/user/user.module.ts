@@ -2,6 +2,8 @@ import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { CaslModule } from 'src/casl/casl.module';
+
 import { BullmqQueueName } from '../constants/bullmq.constant';
 
 import { AudioProcessor } from './consumers/audio.consumer';
@@ -21,6 +23,7 @@ import { UserSubscriber } from './user.subscriber';
         name: BullmqQueueName.VIDEO,
       },
     ),
+    CaslModule,
   ],
   controllers: [UserController],
   providers: [UserService, UserSubscriber, AudioProcessor],

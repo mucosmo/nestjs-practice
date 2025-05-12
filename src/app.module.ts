@@ -14,6 +14,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArticleModule } from './article/article.module';
 import { AuthModule } from './auth/auth.module';
+import { CaslModule } from './casl/casl.module';
 import appConfig from './configs/app.config';
 import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
 import mongoConfig from './configs/mongo.config';
@@ -77,6 +78,7 @@ import { UserModule } from './user/user.module';
     }),
     UserModule,
     AuthModule,
+    CaslModule,
     ArticleModule,
   ],
   controllers: [AppController],

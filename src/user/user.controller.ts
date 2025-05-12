@@ -124,4 +124,10 @@ export class UserController {
       size: file.size,
     };
   }
+
+  @Get('/feat/casl')
+  verifyCasl() {
+    const result = this.userService.featCasl();
+    return result;
+  }
 }
