@@ -12,6 +12,7 @@ import { WinstonModule } from 'nest-winston';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ArticleModule } from './article/article.module';
 import { AuthModule } from './auth/auth.module';
 import appConfig from './configs/app.config';
 import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
@@ -76,6 +77,7 @@ import { UserModule } from './user/user.module';
     }),
     UserModule,
     AuthModule,
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
