@@ -135,12 +135,14 @@ export class UserService extends BaseService {
         username: 'john',
         password: 'changeme',
         roles: ['user'],
+        isAdmin: false,
       },
       {
         userId: 2,
         username: 'maria',
         password: 'guess',
         roles: ['admin'],
+        isAdmin: true,
       },
     ];
     return users.find((user) => user.username === username);
