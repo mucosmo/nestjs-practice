@@ -19,7 +19,7 @@ import { AuthService } from './auth.service';
       global: true,
       useFactory: (configService: ConfigService) => ({
         secret: configService.get(ConfigEnum.APP)?.jwtSecret,
-        signOptions: { expiresIn: '60s' },
+        signOptions: { expiresIn: '24h' },
       }),
     }),
   ],
