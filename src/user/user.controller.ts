@@ -19,7 +19,9 @@ import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { Observable, of, interval } from 'rxjs';
 import { map, take, toArray } from 'rxjs/operators';
 
+import { Role } from 'src/constants/role.constants';
 import { Public } from 'src/decorators/public.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
 
 import { User as UserDec } from '../decorators/user.decorator';
 import { AuthGuard } from '../guards/auth.guard';
@@ -38,6 +40,7 @@ export class UserController {
   ) {}
 
   @Post()
+  @Roles(Role.Admin)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }

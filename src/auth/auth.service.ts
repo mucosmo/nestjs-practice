@@ -19,7 +19,7 @@ export class AuthService {
     const { password, ...result } = user;
     // TODO: Generate a JWT and return it here
     // instead of the user object
-    const payload = { userid: user.userId, username: user.username };
+    const payload = { userid: user.userId, username: user.username, roles: user.roles };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

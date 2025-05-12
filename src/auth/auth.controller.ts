@@ -9,6 +9,8 @@ import {
   Request,
 } from '@nestjs/common';
 
+import { Public } from 'src/decorators/public.decorator';
+
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
@@ -16,6 +18,7 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
   signIn(@Body() signInDto: Record<string, string>) {
