@@ -1,8 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+
+import { AppAbility } from 'src/casl/casl-ability.factory/casl-ability.factory';
+import { Action } from 'src/constants/action.constants';
+import { CheckPolicies } from 'src/decorators/check-policies.decorator';
+import { PoliciesGuard } from 'src/guards/policies.guard';
 
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { Article } from './entities/article.entity';
 
 @Controller('article')
 export class ArticleController {
@@ -14,6 +20,8 @@ export class ArticleController {
   }
 
   @Get()
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Article))
   findAll() {
     return this.articleService.findAll();
   }
