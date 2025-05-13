@@ -3,6 +3,7 @@ import { promisify } from 'util';
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
 import { ConfigEnum } from 'src/constants/config.constant';
 
@@ -50,5 +51,26 @@ export class EncryptUtil {
     const decipher = createDecipheriv(algorithm, key, iv);
     const decryptedText = Buffer.concat([decipher.update(encryptedText), decipher.final()]);
     return decryptedText.toString();
+  }
+
+  /**
+   * 对密码进行哈希运算
+   * @param password 进行哈希运算的密码
+   */
+  async hash(password: string): Promise<string> {
+    const saltOrRounds = 10;
+    //The result string containing: algorithm identifier, cost factor, salt, and hash
+    const hash = await bcrypt.hash(password, saltOrRounds);
+    return hash;
+  }
+
+  /**
+   * 比较密码和哈希值
+   * @param password 要比较的密码
+   * @param hash 要比较的哈希值
+   */
+  async compare(password: string, hash: string): Promise<boolean> {
+    const result = await bcrypt.compare(password, hash);
+    return result;
   }
 }

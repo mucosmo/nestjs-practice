@@ -139,4 +139,12 @@ export class UserController {
     const result = this.encryptUtil.decrypt(data, iv);
     return result;
   }
+
+  @Get('/feat/hash')
+  async hash() {
+    const password = '123456';
+    const hashed = await this.encryptUtil.hash(password);
+    const isMatch = await this.encryptUtil.compare(password, hashed);
+    return { hashed, isMatch };
+  }
 }
