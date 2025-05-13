@@ -9,6 +9,7 @@
     "node": "~20.19.0"
   },
   "scripts": {
+    "prebuild": "node src/scripts/build-version.js",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
