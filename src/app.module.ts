@@ -25,6 +25,7 @@ import winstonConfig from './configs/winston.config';
 import { ConfigEnum } from './constants/config.constant';
 import { HttpLoggerMiddleware } from './middlewares/httpLogger.middleware';
 import { UserModule } from './user/user.module';
+import { UtilsModule } from './utils/utils.module';
 
 @Global()
 @Module({
@@ -80,6 +81,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     CaslModule,
     ArticleModule,
+    UtilsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

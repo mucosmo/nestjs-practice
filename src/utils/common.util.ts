@@ -1,5 +1,3 @@
-import { networkInterfaces } from 'os';
-
 export class CommonUtil {
   /**
    * 延迟指定的时间

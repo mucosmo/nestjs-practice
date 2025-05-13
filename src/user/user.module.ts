@@ -27,7 +27,7 @@ import { UserSubscriber } from './user.subscriber';
     CaslModule,
   ],
   controllers: [UserController],
-  providers: [UserService, UserSubscriber, AudioProcessor, EncryptUtil],
+  providers: [UserService, UserSubscriber, AudioProcessor],
   exports: [UserService],
 })
 export class UserModule {}
