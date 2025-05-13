@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CaslModule } from 'src/casl/casl.module';
+import { EncryptUtil } from 'src/utils/encypt.util';
 
 import { BullmqQueueName } from '../constants/bullmq.constant';
 
@@ -26,7 +27,7 @@ import { UserSubscriber } from './user.subscriber';
     CaslModule,
   ],
   controllers: [UserController],
-  providers: [UserService, UserSubscriber, AudioProcessor],
+  providers: [UserService, UserSubscriber, AudioProcessor, EncryptUtil],
   exports: [UserService],
 })
 export class UserModule {}

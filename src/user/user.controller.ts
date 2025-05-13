@@ -22,6 +22,7 @@ import { map, take, toArray } from 'rxjs/operators';
 import { Role } from 'src/constants/role.constants';
 import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/decorators/roles.decorator';
+import { EncryptUtil } from 'src/utils/encypt.util';
 
 import { User as UserDec } from '../decorators/user.decorator';
 import { AuthGuard } from '../guards/auth.guard';
@@ -37,6 +38,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private configService: ConfigService,
+    private encryptUtil: EncryptUtil, // 这里可以注入 EncryptUtil
   ) {}
 
   @Post()
@@ -128,6 +130,13 @@ export class UserController {
   @Get('/feat/casl')
   verifyCasl() {
     const result = this.userService.featCasl();
+    return result;
+  }
+
+  @Get('/feat/encrypt')
+  async encrypt() {
+    const { iv, data } = await this.encryptUtil.encypt('He1l0 W0r1d to be encrypted');
+    const result = this.encryptUtil.decrypt(data, iv);
     return result;
   }
 }

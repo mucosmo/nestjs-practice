@@ -7,4 +7,6 @@ export default registerAs(ConfigEnum.APP, () => ({
   port: parseInt(process.env.PORT || '3000', 10),
   apiPrefix: process.env.API_PREFIX,
   jwtSecret: process.env.JWT_SECRET,
+  encryptPassword: process.env.ENCRYPT_PASSWORD,
+  encryptSalt: process.env.ENCRYPT_SALT,
 }));
