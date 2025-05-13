@@ -12,7 +12,9 @@ export class CommonUtil {
    * 获取项目版本信息（静态数据，构建时生成）
    */
   static versionInfo() {
-    const versionInfo = fs.readFileSync('version-info.json', 'utf-8');
+    const filePath = 'version-info.json';
+    if (!fs.existsSync(filePath)) return null;
+    const versionInfo = fs.readFileSync(filePath, 'utf-8');
     return JSON.parse(versionInfo);
   }
 }
