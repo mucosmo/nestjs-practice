@@ -12,7 +12,11 @@ export function versionInfo() {
     const commitHash = execSync('git rev-parse HEAD').toString().trim();
     const commitDate = execSync('git log -1 --format=%cd').toString().trim();
     const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
-    const tag = execSync('git describe --tags --abbrev=0 || echo "no-tag"').toString().trim();
+    let tag = 'no-tag';
+    const hasTags = execSync('git tag').toString().trim();
+    if (hasTags) {
+      tag = execSync('git describe --tags --abbrev=0').toString().trim();
+    }
 
     const versionInfo = {
       env: process.env.NODE_ENV,
