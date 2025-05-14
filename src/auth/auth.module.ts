@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { ConfigEnum } from 'src/constants/config.constant';
 import { RolesGuard } from 'src/guards/roles.guard';
@@ -33,6 +34,10 @@ import { AuthService } from './auth.service';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
   controllers: [AuthController],

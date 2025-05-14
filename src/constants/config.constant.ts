@@ -5,4 +5,5 @@ export enum ConfigEnum {
   APP = 'app',
   MONGO = 'mongo',
   WINSTON = 'winston',
+  RATELIMIT = 'ratelimit',
 }

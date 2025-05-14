@@ -5,6 +5,7 @@ import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheableMemory } from 'cacheable';
 import { Keyv } from 'keyv';
@@ -20,6 +21,7 @@ import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
 import mongoConfig from './configs/mongo.config';
 import { MulterConfigService } from './configs/multer.config';
 import mysqlConfig, { IMysqlConfig } from './configs/mysql.config';
+import ratelimitConfig from './configs/ratelimit.config';
 import redisConfig from './configs/redis.config';
 import winstonConfig from './configs/winston.config';
 import { ConfigEnum } from './constants/config.constant';
@@ -36,7 +38,15 @@ import { UtilsModule } from './utils/utils.module';
       // 从命令行参数中获取环境变量，然后从指定的文件中加载获取其他变量，
       // 用于下面的 load 文件中（先注册后获取）
       envFilePath: [`envs/.${process.env.NODE_ENV ?? 'dev'}.env`],
-      load: [appConfig, mongoConfig, mysqlConfig, redisConfig, bullConfig, winstonConfig],
+      load: [
+        appConfig,
+        mongoConfig,
+        mysqlConfig,
+        redisConfig,
+        bullConfig,
+        winstonConfig,
+        ratelimitConfig,
+      ],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -76,6 +86,17 @@ import { UtilsModule } from './utils/utils.module';
       imports: [ConfigModule],
       useClass: MulterConfigService,
       inject: [ConfigService],
+    }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const { throttlers, generateKey } = configService.get(ConfigEnum.RATELIMIT);
+        return {
+          throttlers,
+          generateKey,
+        };
+      },
     }),
     UserModule,
     AuthModule,
