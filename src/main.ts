@@ -22,7 +22,11 @@ async function bootstrap() {
       maxStringLength: Infinity,
     }),
   });
-  app.use(helmet());
+  app.use(
+    helmet({
+      hidePoweredBy: true,
+    }),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: true, //FIXME: 关闭错误信息没用
