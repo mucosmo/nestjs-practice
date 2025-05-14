@@ -2,6 +2,7 @@ import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common'; // 导�
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import compression from 'compression';
+import helmet from 'helmet';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import * as packageJson from '../package.json';
@@ -21,6 +22,7 @@ async function bootstrap() {
       maxStringLength: Infinity,
     }),
   });
+  app.use(helmet());
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: true, //FIXME: 关闭错误信息没用
