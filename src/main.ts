@@ -27,6 +27,7 @@ async function bootstrap() {
       hidePoweredBy: true,
     }),
   );
+  app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: true, //FIXME: 关闭错误信息没用
