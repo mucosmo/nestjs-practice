@@ -21,8 +21,5 @@
     "esModuleInterop": true,
     "allowJs": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/scripts/**/*.js" // Add this line
-  ]
+  "include": ["src/**/*.ts", "src/scripts/**/*.js", "ecosystem.config.js"]
 }
