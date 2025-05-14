@@ -7,7 +7,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as packageJson from '../package.json';
 
 import { AppModule } from './app.module';
-import { CommonUtil } from './utils/common.util';
+import { versionInfo } from './scripts/build-version';
 import { NetworkUtil } from './utils/network.util';
 
 async function bootstrap() {
@@ -53,7 +53,7 @@ async function bootstrap() {
   const origin = NetworkUtil.getOrigin(+port);
   const logger = new Logger('Bootstrap');
   logger.log(`Server is listening at ${origin}`);
-  logger.log({ version: CommonUtil.versionInfo() });
+  logger.log({ version: versionInfo() });
 }
 // Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler
 // or be explicitly marked as ignored with the `void` operator.eslint@typescript-eslint/no-floating-promises

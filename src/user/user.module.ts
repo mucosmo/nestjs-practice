@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CaslModule } from 'src/casl/casl.module';
-import { EncryptUtil } from 'src/utils/encypt.util';
 
 import { BullmqQueueName } from '../constants/bullmq.constant';
 
