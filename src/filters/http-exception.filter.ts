@@ -1,9 +1,11 @@
 // filepath: /Users/huanyu/Documents/Codes/nestjs-practice/src/filters/http-exception.filter.ts
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(HttpExceptionFilter.name);
+
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -17,6 +19,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       data: null,
       reqId: request['requestId'],
     };
+
+    this.logger.error(errorResponse);
 
     response.status(status).json(errorResponse);
   }
