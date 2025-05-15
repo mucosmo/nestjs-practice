@@ -1,7 +1,15 @@
 import { createKeyv } from '@keyv/redis';
 import { BullModule } from '@nestjs/bullmq';
 import { CacheModule } from '@nestjs/cache-manager';
-import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
+import {
+  BeforeApplicationShutdown,
+  Global,
+  Logger,
+  MiddlewareConsumer,
+  Module,
+  OnApplicationShutdown,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -110,11 +118,26 @@ import { UtilsModule } from './utils/utils.module';
   providers: [AppService],
   exports: [MulterModule],
 })
-export class AppModule {
+export class AppModule implements OnModuleInit, BeforeApplicationShutdown, OnApplicationShutdown {
+  private readonly logger = new Logger(AppModule.name);
+
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(HttpLoggerMiddleware)
       .exclude('user/stream') // 排除 user/stream 路由
       .forRoutes('*');
+  }
+
+  onModuleInit() {
+    this.logger.log('App init ...');
+  }
+
+  async beforeApplicationShutdown(signal?: string) {
+    this.logger.log(`Received close signal (${signal})，ready to close...`);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+
+  onApplicationShutdown(signal?: string) {
+    this.logger.log(`App is closed (${signal}).`);
   }
 }

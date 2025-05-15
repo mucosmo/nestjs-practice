@@ -26,6 +26,7 @@ async function bootstrap() {
       maxStringLength: Infinity,
     }),
   });
+  app.enableShutdownHooks();
   app.use(
     helmet({
       hidePoweredBy: true,
