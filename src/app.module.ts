@@ -25,6 +25,7 @@ import ratelimitConfig from './configs/ratelimit.config';
 import redisConfig from './configs/redis.config';
 import winstonConfig from './configs/winston.config';
 import { ConfigEnum } from './constants/config.constant';
+import { EventsModule } from './events/events.module';
 import { HttpLoggerMiddleware } from './middlewares/httpLogger.middleware';
 import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
@@ -103,6 +104,7 @@ import { UtilsModule } from './utils/utils.module';
     CaslModule,
     ArticleModule,
     UtilsModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
