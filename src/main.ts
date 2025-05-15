@@ -8,6 +8,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as packageJson from '../package.json';
 
 import { AppModule } from './app.module';
+import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { versionInfo } from './scripts/build-version';
@@ -33,6 +34,8 @@ async function bootstrap() {
   app.enableCors();
   // 全局注册响应转换拦截器
   app.useGlobalInterceptors(new TransformInterceptor());
+  // 全局异常过滤器
+  app.useGlobalFilters(new GlobalExceptionFilter());
   // HTTP异常过滤器
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
