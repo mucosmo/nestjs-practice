@@ -1,0 +1,46 @@
+<html>
+
+<head>
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"
+    integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs"
+    crossorigin="anonymous"></script>
+  <script>
+    const socket = io('http://localhost:3300');
+    // 加入房间
+    function joinRoom(roomName) {
+      socket.emit('joinRoom', roomName);
+    }
+
+    // 发送房间消息
+    function sendRoomMessage(roomName, message) {
+      socket.emit('roomMessage', { room: roomName, message: message });
+    }
+
+    // 离开房间
+    function leaveRoom(roomName) {
+      socket.emit('leaveRoom', roomName);
+    }
+
+
+    socket.on('connect', function () {
+      console.log('Connected to server');
+      joinRoom('room1'); // 加入房间
+    });
+
+    // 监听房间消息
+    socket.on('roomMessage', function (data) {
+      console.log(`${data.sender} says: ${data.message}`);
+    });
+
+    // 监听加入房间确认
+    socket.on('joinedRoom', function (data) {
+      console.log(`Joined room: ${data.room}`);
+    });
+
+
+  </script>
+</head>
+
+<body></body>
+
+</html>
