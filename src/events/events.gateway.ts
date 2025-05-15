@@ -8,7 +8,7 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { from, Observable } from 'rxjs';
-import { map, timeInterval } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Server } from 'socket.io';
 
 @WebSocketGateway({
