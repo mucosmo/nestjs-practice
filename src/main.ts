@@ -73,6 +73,14 @@ async function bootstrap() {
   logger.log({ version: versionInfo() });
   const instanceInfoUtil = app.get(InstanceInfoUtil);
   logger.log({ instanceInfo: instanceInfoUtil.getInstanceInfo() });
+
+  process.on('unhandledRejection', (error) => {
+    logger.error(error);
+  });
+
+  process.on('uncaughtException', (error) => {
+    logger.error({ error });
+  });
 }
 // Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler
 // or be explicitly marked as ignored with the `void` operator.eslint@typescript-eslint/no-floating-promises
