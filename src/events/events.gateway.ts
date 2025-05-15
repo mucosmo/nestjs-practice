@@ -1,4 +1,5 @@
 import { Logger } from '@nestjs/common';
+import { Interval } from '@nestjs/schedule';
 import {
   MessageBody,
   SubscribeMessage,
@@ -7,7 +8,7 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, timeInterval } from 'rxjs/operators';
 import { Server } from 'socket.io';
 
 @WebSocketGateway({
@@ -30,5 +31,12 @@ export class EventsGateway {
   @SubscribeMessage('identity')
   identity(@MessageBody() data: number): number {
     return data;
+  }
+
+  @Interval(10000)
+  handleInterval() {
+    const connectedClients = this.server.sockets.sockets.size;
+    this.logger.log(`Connected clients: ${connectedClients}`);
+    this.server.emit('broadcast', { msg: 'This is a broadcast message' });
   }
 }
