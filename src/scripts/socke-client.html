@@ -5,7 +5,11 @@
     integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs"
     crossorigin="anonymous"></script>
   <script>
-    const socket = io('http://localhost:3300');
+    const socket = io('http://localhost:3300', {
+      query: {
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsInVzZXJuYW1lIjoiam9obiIsInJvbGVzIjpbInVzZXIiXSwiaWF0IjoxNzQ3Mjk0NjA1LCJleHAiOjE3NDczODEwMDV9.rPJLaDCkh_OlOefuVWToSEgboH-3ItR99sIomY9bFt4'
+      }
+    });
     socket.on('connect', function () {
       console.log('Connected to server');
 
