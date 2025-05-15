@@ -8,6 +8,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as packageJson from '../package.json';
 
 import { AppModule } from './app.module';
+import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { versionInfo } from './scripts/build-version';
 import { InstanceInfoUtil } from './utils/instance-info.util';
 import { NetworkUtil } from './utils/network.util';
@@ -29,6 +30,8 @@ async function bootstrap() {
     }),
   );
   app.enableCors();
+  // 全局注册响应转换拦截器
+  app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: true, //FIXME: 关闭错误信息没用
