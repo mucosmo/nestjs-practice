@@ -9,6 +9,7 @@ import * as packageJson from '../package.json';
 
 import { AppModule } from './app.module';
 import { versionInfo } from './scripts/build-version';
+import { InstanceInfoUtil } from './utils/instance-info.util';
 import { NetworkUtil } from './utils/network.util';
 
 async function bootstrap() {
@@ -61,6 +62,8 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   logger.log(`Server is listening at ${origin}`);
   logger.log({ version: versionInfo() });
+  const instanceInfoUtil = app.get(InstanceInfoUtil);
+  logger.log({ instanceInfo: instanceInfoUtil.getInstanceInfo() });
 }
 // Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler
 // or be explicitly marked as ignored with the `void` operator.eslint@typescript-eslint/no-floating-promises
