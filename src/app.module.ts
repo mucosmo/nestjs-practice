@@ -135,7 +135,7 @@ export class AppModule implements OnModuleInit, BeforeApplicationShutdown, OnApp
 
   async beforeApplicationShutdown(signal?: string) {
     this.logger.log(`Received close signal (${signal})，ready to close...`);
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 50));
   }
 
   onApplicationShutdown(signal?: string) {
