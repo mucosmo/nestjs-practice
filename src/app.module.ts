@@ -1,4 +1,3 @@
-import { createKeyv } from '@keyv/redis';
 import { BullModule } from '@nestjs/bullmq';
 import { CacheModule } from '@nestjs/cache-manager';
 import {
@@ -16,8 +15,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { QueueOptions } from 'bullmq';
-import { CacheableMemory } from 'cacheable';
-import { Keyv } from 'keyv';
 import { WinstonModule } from 'nest-winston';
 
 import { AppController } from './app.controller';
@@ -27,6 +24,7 @@ import { AuthModule } from './auth/auth.module';
 import { CaslModule } from './casl/casl.module';
 import appConfig from './configs/app.config';
 import bullConfig from './configs/bullmq.config';
+import cacheConfig, { ICacheConfig } from './configs/cache.config';
 import mongoConfig from './configs/mongo.config';
 import { MulterConfigService } from './configs/multer.config';
 import mysqlConfig, { IMysqlConfig } from './configs/mysql.config';
@@ -56,6 +54,7 @@ import { UtilsModule } from './utils/utils.module';
         bullConfig,
         winstonConfig,
         ratelimitConfig,
+        cacheConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({
@@ -69,12 +68,7 @@ import { UtilsModule } from './utils/utils.module';
       isGlobal: true,
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        stores: [
-          // new Keyv({
-          //   store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
-          // }),
-          createKeyv(configService.get(ConfigEnum.REDIS)?.uri),
-        ],
+        ...configService.get<ICacheConfig>(ConfigEnum.CACHE)!,
       }),
     }),
     ScheduleModule.forRoot(),

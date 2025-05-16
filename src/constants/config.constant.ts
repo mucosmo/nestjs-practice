@@ -6,4 +6,5 @@ export enum ConfigEnum {
   MONGO = 'mongo',
   WINSTON = 'winston',
   RATELIMIT = 'ratelimit',
+  CACHE = 'cache',
 }
