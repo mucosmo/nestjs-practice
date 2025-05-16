@@ -3,6 +3,8 @@ import { QueueOptions } from 'bullmq';
 
 import { ConfigEnum } from '../constants/config.constant';
 
+import { redisNamespace } from './redis.config';
+
 export default registerAs(
   ConfigEnum.BULLMQ,
   (): QueueOptions => ({
@@ -10,7 +12,7 @@ export default registerAs(
       host: process.env.REDIS_HOST || 'localhost',
       port: Number(process.env.REDIS_PORT),
     },
-    prefix: `bull:${process.env.NODE_ENV || 'dev'}${process.env.REDIS_PREFIX ? `:${process.env.REDIS_PREFIX}` : ''}`,
+    prefix: `${redisNamespace}:bull`,
     defaultJobOptions: {
       removeOnComplete: true,
       removeOnFail: false,
