@@ -22,15 +22,10 @@ import { AppService } from './app.service';
 import { ArticleModule } from './article/article.module';
 import { AuthModule } from './auth/auth.module';
 import { CaslModule } from './casl/casl.module';
-import appConfig from './configs/app.config';
-import bullConfig from './configs/bullmq.config';
-import cacheConfig, { ICacheConfig } from './configs/cache.config';
-import mongoConfig from './configs/mongo.config';
+import { ICacheConfig } from './configs/cache.config';
+import configs from './configs/index.config';
 import { MulterConfigService } from './configs/multer.config';
-import mysqlConfig, { IMysqlConfig } from './configs/mysql.config';
-import ratelimitConfig from './configs/ratelimit.config';
-import redisConfig from './configs/redis.config';
-import winstonConfig from './configs/winston.config';
+import { IMysqlConfig } from './configs/mysql.config';
 import { ConfigEnum } from './constants/config.constant';
 import { EventsModule } from './events/events.module';
 import { HttpLoggerMiddleware } from './middlewares/httpLogger.middleware';
@@ -46,16 +41,7 @@ import { UtilsModule } from './utils/utils.module';
       // 从命令行参数中获取环境变量，然后从指定的文件中加载获取其他变量，
       // 用于下面的 load 文件中（先注册后获取）
       envFilePath: [`envs/.${process.env.NODE_ENV ?? 'dev'}.env`],
-      load: [
-        appConfig,
-        mongoConfig,
-        mysqlConfig,
-        redisConfig,
-        bullConfig,
-        winstonConfig,
-        ratelimitConfig,
-        cacheConfig,
-      ],
+      load: configs,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
