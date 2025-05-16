@@ -15,6 +15,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { QueueOptions } from 'bullmq';
 import { CacheableMemory } from 'cacheable';
 import { Keyv } from 'keyv';
 import { WinstonModule } from 'nest-winston';
@@ -25,7 +26,7 @@ import { ArticleModule } from './article/article.module';
 import { AuthModule } from './auth/auth.module';
 import { CaslModule } from './casl/casl.module';
 import appConfig from './configs/app.config';
-import bullConfig, { IBullmqConfig } from './configs/bullmq.config';
+import bullConfig from './configs/bullmq.config';
 import mongoConfig from './configs/mongo.config';
 import { MulterConfigService } from './configs/multer.config';
 import mysqlConfig, { IMysqlConfig } from './configs/mysql.config';
@@ -81,7 +82,7 @@ import { UtilsModule } from './utils/utils.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        connection: configService.get<IBullmqConfig>(ConfigEnum.BULLMQ) || {},
+        ...configService.get<QueueOptions>(ConfigEnum.BULLMQ)!,
       }),
     }),
     WinstonModule.forRootAsync({
