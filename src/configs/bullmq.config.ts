@@ -3,7 +3,7 @@ import { QueueOptions } from 'bullmq';
 
 import { ConfigEnum } from '../constants/config.constant';
 
-import { redisNamespace } from './redis.config';
+import { redisNamespace } from './app.config';
 
 export default registerAs(
   ConfigEnum.BULLMQ,

@@ -5,7 +5,7 @@ import { Keyv } from 'keyv';
 
 import { ConfigEnum } from '../constants/config.constant';
 
-import { redisNamespace } from './redis.config';
+import { redisNamespace } from './app.config';
 
 export interface ICacheConfig {
   stores: [];
