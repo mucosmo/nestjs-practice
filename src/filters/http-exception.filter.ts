@@ -20,6 +20,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
       reqId: request['requestId'],
     };
 
+    //to avoid confict with winston built-in message field
+    errorResponse['msg'] = errorResponse.message;
+    delete errorResponse.message;
+
     this.logger.error(errorResponse);
 
     response.status(status).json(errorResponse);
