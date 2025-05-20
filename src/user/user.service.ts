@@ -74,12 +74,12 @@ export class UserService extends BaseService {
     }
   }
 
-  @Cron('45 * * * * *')
+  @Cron('45 * * 1 * *')
   handleCron() {
-    this.logger.warn('Called when the current second is 45');
+    this.logger.warn("Called when the current second is 45 and it's first day of the month ");
   }
 
-  @Interval(30000)
+  // @Interval(30000)
   handleInterval() {
     this.logger.warn('Called every 30 seconds');
   }

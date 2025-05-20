@@ -35,7 +35,7 @@ export class EventsGateway extends BaseGateway {
     return data;
   }
 
-  @Interval(10000)
+  // @Interval(10000)
   handleInterval() {
     const connectedClients = this.server.sockets.sockets.size;
     this.logger.log(`Connected clients: ${connectedClients}`);
