@@ -5,6 +5,18 @@ import * as winston from 'winston';
 import * as packageJson from '../../package.json';
 import { ConfigEnum } from '../constants/config.constant';
 
+function safeStringify(obj) {
+  return JSON.stringify(obj, (key, value) => {
+    if (value instanceof Error) {
+      return {
+        message: value.message,
+        stack: value.stack,
+      };
+    }
+    return value;
+  });
+}
+
 interface WinstonLogInfo extends winston.Logform.TransformableInfo {
   timestamp: string;
   level: string;
@@ -72,7 +84,7 @@ const printfFormatMessage = (info: WinstonLogInfo) => {
         {} as Record<string, any>,
       );
     if (Object.keys(metadata).length > 0) {
-      message += `${JSON.stringify(metadata)}`;
+      message += `${safeStringify(metadata)}`;
     }
   }
   return message;
