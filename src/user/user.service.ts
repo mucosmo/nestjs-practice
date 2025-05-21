@@ -1,15 +1,18 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { Cron, Interval, Timeout } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Queue } from 'bullmq';
 import { Cache } from 'cache-manager';
+import { firstValueFrom } from 'rxjs';
 import { DataSource, Repository } from 'typeorm';
 
 import { Article } from 'src/article/entities/article.entity';
 import { CaslAbilityFactory } from 'src/casl/casl-ability.factory/casl-ability.factory';
 import { Action } from 'src/constants/action.constants';
+import { EMicroservice } from 'src/constants/microservice.constants';
 import { BaseService } from 'src/core/base.service';
 
 import { BullmqQueueName } from '../constants/bullmq.constant';
@@ -29,6 +32,7 @@ export class UserService extends BaseService {
     @InjectQueue(BullmqQueueName.AUDIO) private audioQueue: Queue,
     @InjectQueue(BullmqQueueName.VIDEO) private videoQueue: Queue,
     private caslAbilityFactory: CaslAbilityFactory,
+    @Inject(EMicroservice.MATH_SERVICE) private client: ClientProxy,
   ) {
     super();
   }
@@ -173,5 +177,18 @@ export class UserService extends BaseService {
     const ability5 = ability.can(Action.Update, article); // false
 
     return { ability1, ability2, ability3, ability4, ability5 };
+  }
+
+  @Timeout(100)
+  async microservice(id: number) {
+    this.client.send('createMath', { id }).subscribe({
+      next: (response) => this.logger.log({ msg: 'createMath resonse', response }),
+      error: (err) => this.logger.error({ msg: 'createMath error', err }),
+    });
+
+    const response = await firstValueFrom(this.client.send('ping', {}));
+    this.logger.log({ response });
+
+    this.client.emit('user_created', { id, name: 'John Doe' });
   }
 }

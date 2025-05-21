@@ -28,6 +28,7 @@ import { MulterConfigService } from './configs/multer.config';
 import { IMysqlConfig } from './configs/mysql.config';
 import { ConfigEnum } from './constants/config.constant';
 import { EventsModule } from './events/events.module';
+import { MathModule } from './math/math.module';
 import { HttpLoggerMiddleware } from './middlewares/httpLogger.middleware';
 import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
@@ -94,6 +95,7 @@ import { UtilsModule } from './utils/utils.module';
     ArticleModule,
     UtilsModule,
     EventsModule,
+    MathModule,
   ],
   controllers: [AppController],
   providers: [AppService],

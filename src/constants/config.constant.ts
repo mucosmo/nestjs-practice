@@ -7,4 +7,6 @@ export enum ConfigEnum {
   WINSTON = 'winston',
   RATELIMIT = 'ratelimit',
   CACHE = 'cache',
+  /**microservice based on tcp */
+  MICRO_TCP = 'micro_tcp',
 }

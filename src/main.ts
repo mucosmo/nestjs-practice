@@ -1,5 +1,7 @@
 import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common'; // 导入 Logger
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { MicroserviceOptions } from '@nestjs/microservices';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import compression from 'compression';
 import helmet from 'helmet';
@@ -8,6 +10,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as packageJson from '../package.json';
 
 import { AppModule } from './app.module';
+import { ConfigEnum } from './constants/config.constant';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
@@ -81,6 +84,16 @@ async function bootstrap() {
 
   process.on('uncaughtException', (error) => {
     logger.error({ error });
+  });
+
+  const configService = app.get(ConfigService);
+
+  const tcpApp = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    configService.get(ConfigEnum.MICRO_TCP),
+  );
+  await tcpApp.listen().then(() => {
+    logger.log('TCP microservice is listening');
   });
 }
 // Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler

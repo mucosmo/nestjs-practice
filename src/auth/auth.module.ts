@@ -6,6 +6,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { ConfigEnum } from 'src/constants/config.constant';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { CustomThrottlerGuard } from 'src/guards/throttler.guard';
 
 import { UserModule } from '../user/user.module';
 
@@ -37,7 +38,8 @@ import { AuthService } from './auth.service';
     },
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
+      // useClass: ThrottlerGuard,
+      useClass: CustomThrottlerGuard,
     },
   ],
   controllers: [AuthController],
