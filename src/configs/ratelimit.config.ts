@@ -13,7 +13,7 @@ export default registerAs(ConfigEnum.RATELIMIT, () => {
   ];
   const generateKey = (context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest<Request>();
-    let ip = request.ip || request.headers['x-forwarded-for'] || 'unknown';
+    let ip = request.ip || request.headers?.['x-forwarded-for'] || 'unknown';
     if (Array.isArray(ip)) {
       ip = ip[0];
     }
