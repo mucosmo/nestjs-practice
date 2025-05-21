@@ -92,8 +92,9 @@ async function bootstrap() {
     AppModule,
     configService.get(ConfigEnum.MICRO_TCP),
   );
+  const { host: tcpHost, port: tcpPort } = configService.get(ConfigEnum.MICRO_TCP).options;
   await tcpApp.listen().then(() => {
-    logger.log('TCP microservice is listening');
+    logger.log(`TCP microservice is listening at ${tcpHost}:${tcpPort}`);
   });
 }
 // Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler
