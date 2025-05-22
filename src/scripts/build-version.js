@@ -6,7 +6,7 @@ import * as path from 'path';
  * 生成版本信息
  */
 export function versionInfo() {
-  const filePath = 'version-info.json';
+  const filePath = 'dist/version-info.json';
   try {
     // 获取 Git 信息（仅在构建时需要 Git）
     const commitHash = execSync('git rev-parse HEAD').toString().trim();
