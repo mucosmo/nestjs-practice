@@ -15,8 +15,8 @@ export default registerAs(ConfigEnum.MICRO_TCP, (): ITcpMicroserviceConfig => {
   return {
     transport: Transport.TCP,
     options: {
-      host: '127.0.0.1',
-      port: 3301,
+      host: process.env.MICROSERVICE_TCP_HOST || 'localhost',
+      port: Number(process.env.MICROSERVICE_TCP_PORT || 0),
     },
   };
 });

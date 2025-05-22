@@ -14,6 +14,7 @@ import { ConfigEnum } from './constants/config.constant';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
+import { TcpMicroserviceModule } from './microservice/tcp.module';
 import { versionInfo } from './scripts/build-version';
 import { InstanceInfoUtil } from './utils/instance-info.util';
 import { NetworkUtil } from './utils/network.util';
@@ -89,7 +90,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const tcpApp = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
+    TcpMicroserviceModule,
     configService.get(ConfigEnum.MICRO_TCP),
   );
   const { host: tcpHost, port: tcpPort } = configService.get(ConfigEnum.MICRO_TCP).options;
