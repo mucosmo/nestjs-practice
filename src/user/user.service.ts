@@ -90,14 +90,13 @@ export class UserService extends BaseService {
 
   @Timeout('notification', 10)
   handleTimeout() {
-    this.logger.warn('这个是warn ', '--我不是label');
-    this.logger.log('这个是info ');
-    this.logger.debug('这个是debug');
-    this.logger.error('asdads');
-    this.logger.error(new Error('这个是error'));
+    this.logger.warn('this is warn ', '!!I AM NOT LABEL!!');
+    this.logger.log('this is info ');
+    this.logger.debug('this is debug');
+    this.logger.error('this is error string');
+    this.logger.error(new Error('this is error object'));
     this.logger.log({ a: 1, b: 2 });
-    this.logger.log({ 3: 1, 4: 2, err: { a: 'asas===----' } });
-    this.logger.log({ 3: 1, 4: 2, err: new Error('log对象中的error') }); // 还不行
+    this.logger.log({ 3: 1, 4: 2, err: new Error('error in object') }); // ok
   }
 
   @Timeout(3000)
