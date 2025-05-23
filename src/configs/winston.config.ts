@@ -70,7 +70,8 @@ const printfFormatMessage = (info: WinstonLogInfo) => {
     message = rest.stack?.[0] || message;
   }
   // if (message === 'undefined') message = '';
-  if (Object.keys(rest).length > 2 && !rest.splat) {
+  const len = level === 'error' ? 2 : 1;
+  if (Object.keys(rest).length > len && !rest.splat) {
     const metadata = Object.keys(rest)
       .filter((key) => key != 'stack' && rest[key] !== 'undefined')
       .reduce(
