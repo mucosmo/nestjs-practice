@@ -93,10 +93,26 @@ export class UserService extends BaseService {
     this.logger.warn('this is warn ', '!!I AM NOT LABEL!!');
     this.logger.log('this is info ');
     this.logger.debug('this is debug');
-    this.logger.error('this is error string');
+    this.logger.error('this is 1');
+    this.logger.error({ message: 'this is 2', a: 'aaa' });
+    this.logger.error({ message: 'this is 3' });
+    this.logger.error({ named: 'this is 4' });
+    this.logger.error({ error: 'this is 5', message: 'this is 6' });
+    this.logger.error({ error: 'this is 7' });
+    this.logger.log('undefined');
+    this.logger.log({ message: 'undefined' }); // failed, print as this.logger.log('undefined')
+    this.logger.error({ msg: '', message: 'undefined' }); // failed
+    this.logger.error({ error: new Error('this is 8') });
+    this.logger.log({ errors: undefined, name: null });
+    this.logger.log({ message: undefined, error: undefined }); // failed
+
     this.logger.error(new Error('this is error object'));
     this.logger.log({ a: 1, b: 2 });
-    this.logger.log({ 3: 1, 4: 2, err: new Error('error in object') }); // ok
+    this.logger.log({ 3: 1, 4: 2, err: new Error('error in object') });
+    this.logger.error({ error: new Error('error in object') });
+    this.logger.log({ message: 'hahha', error: 'this is 10' });
+    this.logger.warn({ message: 'hahha', error: 'this is 11' });
+    this.logger.log({ message3: 'hahha', error3: 'meerror' });
   }
 
   @Timeout(3000)
