@@ -13,7 +13,7 @@ function safeStringify(obj) {
         stack: value.stack,
       };
     }
-    return value;
+    return value ? value : String(value);
   });
 }
 
@@ -64,18 +64,15 @@ const baseFormat = winston.format.combine(
 
 const printfFormatMessage = (info: WinstonLogInfo) => {
   const { timestamp, level, context, ms, label, ...rest } = info;
+
   let { message } = info;
   if (level === 'error') {
     message = rest.stack?.[0] || message;
   }
-  if (message === 'undefined') message = '';
-  // 如果有额外数据，添加为 JSON
-  if (Object.keys(rest).length > 0 && !rest.splat) {
-    // 创建要排除的属性集合
-    const excludeProps = ['splat', 'message', 'stack', 'error'];
-    // 创建一个新对象，仅包含不在排除列表中的属性
+  // if (message === 'undefined') message = '';
+  if (Object.keys(rest).length > 2 && !rest.splat) {
     const metadata = Object.keys(rest)
-      .filter((key) => !excludeProps.includes(key))
+      .filter((key) => key != 'stack' && rest[key] !== 'undefined')
       .reduce(
         (obj, key) => {
           obj[key] = rest[key];
@@ -83,9 +80,7 @@ const printfFormatMessage = (info: WinstonLogInfo) => {
         },
         {} as Record<string, any>,
       );
-    if (Object.keys(metadata).length > 0) {
-      message += `${safeStringify(metadata)}`;
-    }
+    message = `${safeStringify(metadata)}`;
   }
   return message;
 };
