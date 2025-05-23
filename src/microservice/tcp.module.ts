@@ -10,6 +10,8 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 
+import { getEnvFilePath } from 'src/utils/env.util';
+
 import configs from '../configs/index.config';
 import { ConfigEnum } from '../constants/config.constant';
 import { MathModule } from '../math/math.module';
@@ -21,9 +23,7 @@ import { HttpLoggerMiddleware } from '../middlewares/httpLogger.middleware';
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      // 从命令行参数中获取环境变量，然后从指定的文件中加载获取其他变量，
-      // 用于下面的 load 文件中（先注册后获取）
-      envFilePath: [`envs/.${process.env.NODE_ENV ?? 'dev'}.env`],
+      envFilePath: getEnvFilePath(),
       load: configs,
     }),
     WinstonModule.forRootAsync({
