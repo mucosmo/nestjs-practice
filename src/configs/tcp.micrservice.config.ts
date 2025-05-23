@@ -2,6 +2,7 @@ import { registerAs } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 
 import { ConfigEnum } from '../constants/config.constant';
+import { getEnv, getEnvNumeric } from '../utils/env.util';
 
 export interface ITcpMicroserviceConfig {
   transport: Transport.TCP;
@@ -15,8 +16,8 @@ export default registerAs(ConfigEnum.MICRO_TCP, (): ITcpMicroserviceConfig => {
   return {
     transport: Transport.TCP,
     options: {
-      host: process.env.MICROSERVICE_TCP_HOST || 'localhost',
-      port: Number(process.env.MICROSERVICE_TCP_PORT),
+      host: getEnv('MICROSERVICE_TCP_HOST'),
+      port: getEnvNumeric('MICROSERVICE_TCP_PORT'),
     },
   };
 });
