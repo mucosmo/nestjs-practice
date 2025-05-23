@@ -19,7 +19,7 @@ export default registerAs(
   (): IMysqlConfig => ({
     type: 'mysql',
     host: process.env.MYSQL_HOST || 'localhost',
-    port: +(process.env.MYSQL_PORT || 0),
+    port: Number(process.env.MYSQL_PORT),
     username: process.env.MYSQL_NAME || '',
     password: process.env.MYSQL_PASS || '',
     database: process.env.MYSQL_DATABASE || '',

@@ -69,7 +69,9 @@ async function bootstrap() {
     }),
   );
 
-  const port = process.env.PORT ?? 3300;
+  const configService = app.get(ConfigService);
+
+  const port = configService.get(ConfigEnum.APP).port;
   await app.listen(port);
 
   const origin = NetworkUtil.getOrigin(+port);
@@ -86,8 +88,6 @@ async function bootstrap() {
   process.on('uncaughtException', (error) => {
     logger.error({ error });
   });
-
-  const configService = app.get(ConfigService);
 
   const tcpApp = await NestFactory.createMicroservice<MicroserviceOptions>(
     TcpMicroserviceModule,
