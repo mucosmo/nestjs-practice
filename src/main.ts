@@ -81,12 +81,12 @@ async function bootstrap() {
   const instanceInfoUtil = app.get(InstanceInfoUtil);
   logger.log({ instanceInfo: instanceInfoUtil.getInstanceInfo() });
 
-  process.on('unhandledRejection', (error) => {
-    logger.error(error);
+  process.on('unhandledRejection', (err) => {
+    logger.error({ msg: 'unhandledRejection', err });
   });
 
-  process.on('uncaughtException', (error) => {
-    logger.error({ error });
+  process.on('uncaughtException', (err) => {
+    logger.error({ msg: 'uncaughtException', err });
   });
 
   const tcpApp = await NestFactory.createMicroservice<MicroserviceOptions>(
