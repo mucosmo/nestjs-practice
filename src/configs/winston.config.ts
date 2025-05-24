@@ -5,19 +5,42 @@ import * as winston from 'winston';
 import * as packageJson from '../../package.json';
 import { ConfigEnum } from '../constants/config.constant';
 
-function safeStringify(obj) {
+export function safeStringify(obj) {
+  const seen = new WeakSet();
   return JSON.stringify(obj, (key, value) => {
     if (value instanceof Error) {
-      return {
+      const errorObj: any = {
         message: value.message,
         stack: value.stack,
       };
+
+      // Include any additional properties on the error
+      for (const prop in value) {
+        if (
+          Object.prototype.hasOwnProperty.call(value, prop) &&
+          prop !== 'message' &&
+          prop !== 'stack'
+        ) {
+          errorObj[prop] = value[prop];
+        }
+      }
+
+      return errorObj;
     }
+
+    // Handle circular references
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return '[Circular]';
+      }
+      seen.add(value);
+    }
+
     return value ? value : String(value);
   });
 }
 
-interface WinstonLogInfo extends winston.Logform.TransformableInfo {
+export interface WinstonLogInfo extends winston.Logform.TransformableInfo {
   timestamp: string;
   level: string;
   context: string;
@@ -30,7 +53,7 @@ interface WinstonLogInfo extends winston.Logform.TransformableInfo {
 }
 
 /** 定义不同日志级别的颜色代码 */
-const colors = {
+export const colors = {
   error: '\x1b[31m', // 红色
   warn: '\x1b[33m', // 黄色
   info: '\x1b[32m', // 绿色
@@ -62,7 +85,7 @@ const baseFormat = winston.format.combine(
   winston.format.uncolorize({ level: true, message: true }),
 );
 
-const printfFormatMessage = (info: WinstonLogInfo) => {
+export const printfFormatMessage = (info: WinstonLogInfo) => {
   const { timestamp, level, context, ms, label, ...rest } = info;
 
   let { message } = info;
@@ -89,7 +112,7 @@ const printfFormatMessage = (info: WinstonLogInfo) => {
 //TODO: 日志格式化会占用小于 1ms 的时间，
 //可以用 performance.now() 亚毫秒级别的时间来观察
 /**控制台日志打印格式 */
-const printfFormatConsole = (info: WinstonLogInfo) => {
+export const printfFormatConsole = (info: WinstonLogInfo) => {
   const { timestamp, level, context, ms, label } = info;
   const levelUpper = level.toUpperCase().padStart(5, ' ');
   const message = printfFormatMessage(info);
@@ -104,7 +127,7 @@ const printfFormatConsole = (info: WinstonLogInfo) => {
 };
 
 /**文件日志打印格式 */
-const printfFormatFile = (info: WinstonLogInfo) => {
+export const printfFormatFile = (info: WinstonLogInfo) => {
   const { timestamp, level, context, ms } = info;
   const message = printfFormatMessage(info);
   const levelUpper = level.toUpperCase().padStart(5, ' ');
